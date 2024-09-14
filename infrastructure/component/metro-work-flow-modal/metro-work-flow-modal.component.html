@@ -1,0 +1,51 @@
+<!-- Modal -->
+<div class="modal modal--show">
+    <!-- Modal-Container -->
+    <div class="modal-container px-3 py-1 rounded-md bg-slate-50 w-1/2 overflow-hidden">
+        <!-- Modal-Title -->
+        <div class="flex items-center justify-between w-full py-2">
+            <h6 class="font-YekanBakhSemiBold">گردش کار</h6>
+            <span class="cursor-pointer" (click)="canceledSelection()">
+                <svg class="w-5 h-5">
+                    <use href="#close"></use>
+                </svg>
+            </span>
+        </div>
+        <!-- Modal-body -->
+        <div class="w-full py-6 border-y border-slate-300">
+            <div class="grid grid-cols-3 items-center justify-between gap-4">
+                <div class="flex flex-col col-span-full h-full gap-y-1 text-xs">
+                    <div>اقدام</div>
+                    <div class="form-item-wrapper flex justify-start">
+                        @for (item of serviceResult?.result; track $index) {
+                        <div class="flex items-center gap-1 p-1" (click)="itemClicked(item)">
+                            <button class="form-check-box" [class.form-check-box--active] = "selectedRow == item"></button>
+                            <span>{{item.title}}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="flex flex-col h-full col-span-full  gap-y-1 text-xs">
+                    <div>توضیحات</div>
+                    <div class="form-item-wrapper">
+                        <input type="text" [(ngModel)]="description" name="" id="" class="w-full h-full outline-none bg-inherit" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal-Footer -->
+        <div class="flex items-center justify-end gap-4 w-full py-2 font-YekanBakhSemiBold">
+            <button (click)="itemSelected()"
+                class="px-2 py-1 text-green-500 border border-green-500 rounded-md hover:text-slate-50 hover:bg-green-500 transition-all">
+                اقدام
+            </button>
+            <button type="button" (click)="canceledSelection()"
+                class="px-2 py-1 text-red-500 border border-red-500 rounded-md hover:text-slate-50 hover:bg-red-500 transition-all">
+                انصراف
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay overlay--active"></div>

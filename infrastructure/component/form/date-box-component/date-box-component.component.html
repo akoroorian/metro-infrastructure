@@ -1,0 +1,9 @@
+<div>{{metroFormControl.column?.title}}</div>
+<div class="form-item-wrapper" [class.form-item-disabled]="metroFormControl.column?.disabled">
+    <input #hidden type="hidden" [id]="'col_' + metroFormControl.column?.name"
+        [formControl]="metroFormControl.control" />
+    <input #input type="text" [id]="'col_' + metroFormControl.column?.name + '_text'" 
+        class="w-full h-full outline-none bg-inherit" [mask]="metroFormControl.column?.format ?? '0000/M0/d0'" (change)="onValueChaged($event)"/>
+</div>
+
+<!-- [value]='getJalaliValue(hidden.value)' -->

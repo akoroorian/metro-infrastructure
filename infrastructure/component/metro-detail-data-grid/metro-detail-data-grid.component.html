@@ -1,0 +1,109 @@
+<!-- Main-Container -->
+<div class="flex flex-col w-full p-3 rounded-md bg-slate-200 shadow-md h-full">
+  <!-- Header-container -->
+  @if(showTools){
+  <div class="flex items-center justify-between gap-2 mb-2">
+    <!-- Tools -->
+    <div class="flex items-center gap-2 max-w-fit">
+      <button type="button" class="tools-btn" (click)="add()">
+        <svg class="h-6 w-6">
+          <use href="#add-box"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn" (click)="remove()">
+        <svg class="h-6 w-6">
+          <use href="#delete"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn" (click)="edit()">
+        <svg class="h-6 w-6">
+          <use href="#edit"></use>
+        </svg>
+      </button>
+    </div>
+  </div>
+  }
+
+  <!-- Table-Wrapper -->
+  <div class="h-full flex items-center justify-center text-sm overflow-hidden" style="position: relative;">
+    <div class="w-full h-full bg-slate-50 text-sm overflow-auto rounded-md border border-slate-300">
+      <!-- Table-Header -->
+      <div
+        class="max-w-full min-w-fit flex flex-col py-1 font-YekanBakhSemiBold text-slate-50 bg-cyan-950 sticky top-0 z-10">
+        <!-- Table-Header-Top -->
+        <div class="flex items-center gap-2 w-full p-2">
+          <!-- table-cel -->
+          <button class="check-box border-slate-50 inline-block flex-shrink-0"></button>
+          @for (col of columns; track col.name) {
+          @if(col.type !== "action"){
+          <button class="inline-flex items-center gap-1 px-1 flex-shrink-0" [style]="getColWidthClass(col)">
+            {{ col.title }}
+          </button>
+          }
+          @else {
+          <button class="inline-flex items-center gap-1 px-1 flex-shrink-0" [style]="getColWidthClass(col)">
+
+          </button>
+          }
+          }
+        </div>
+        <!-- Table-Header-Sub -->
+      </div>
+      <!-- Table-Body -->
+      <div class="max-w-full min-w-fit flex flex-col">
+        <!-- row -->
+        @for (item of detailServiceResult; track $index) {
+        @if(item.action !== dtoActionType.Delete){
+        <div
+          class="inline-flex items-center gap-2 px-2 py-1 hover:bg-sky-300 odd:bg-slate-100 even:bg-slate-200 cursor-pointer transition-colors"
+          [ngClass]="getRowColor(item)"
+          (click)="selectRow(item)" (dblclick)="edit()">
+          <button type="button" class="check-box" [class.check-box--active]="selectedRow === item"></button>
+          @for (col of columns; track col.name) {
+          @if(col.type === 'action'){
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)">
+            @for (action of col.action; track $index) {
+            <button
+              class="bg-slate-50 px-1 py-0.5 text-xs border border-zinc-800 rounded hover:bg-sky-700 hover:text-slate-100 transition-all"
+              (click)="onAction(action, item)">
+              {{ action.name }}
+            </button>
+            }
+          </div>
+          } @else {
+          @if((col.type === 'number' || col.type === 'bool') && col.enum){
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)">
+            {{ getEnumValueByKey(col, getValue(item.dtl, col.name)) }}
+          </div>
+          }
+          @else if(col.type === 'number'){
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)" dir="ltr">
+            {{ col.format ? (getValue(item.dtl, col.name) | mask: col.format : {thousandSeparator:',',
+            allowNegativeNumbers:true}) :
+            (getValue(item.dtl , col.name))}}
+          </div>
+          } @else if(col.type === 'datetime'){
+          <div class="px-1 line-clamp-1" dir="ltr" [style]="getColWidthClass(col)">
+            {{ getValue(item.dtl, col.name)? (getValue(item.dtl, col.name) | jalali) : '' }}
+          </div>
+          }
+
+          @else if(col.type === 'pic'){
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)">
+            <img src="{{ getValue(item.dtl, col.name) }}" />
+          </div>
+          }
+          @else {
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)">
+            {{ getValue(item.dtl, col.name) }}
+          </div>
+          }
+          }
+          }
+        </div>
+        }
+        }
+      </div>
+    </div>
+  </div>
+</div>

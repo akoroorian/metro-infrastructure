@@ -1,0 +1,5 @@
+<div>{{metroFormControl.column?.title}}</div>
+<div class="form-item-wrapper" [class.form-item-disabled]="metroFormControl.column?.disabled">
+    <input type="text" [id]="'col_' + metroFormControl.column?.name" class="w-full h-full outline-none bg-inherit"
+        [formControl]="metroFormControl.control" [mask]="metroFormControl.column?.format" thousandSeparator="," />
+</div>

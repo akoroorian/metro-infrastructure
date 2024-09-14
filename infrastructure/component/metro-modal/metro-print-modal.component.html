@@ -1,0 +1,42 @@
+<!-- Modal -->
+<div class="modal modal--show">
+    <!-- Modal-Container -->
+    <div class="modal-container px-3 py-1 rounded-md bg-slate-50 w-4/5 h-4/5 overflow-auto">
+        <div class="h-full flex-col"
+            style="display: flex !important; align-content: stretch; justify-content: space-between;">
+            <!-- Modal-Title -->
+            <div class="flex items-center justify-between w-full py-2">
+                <h6 class="font-YekanBakhSemiBold">{{title ?? 'پیش نمایش چاپ'}}</h6>
+                <span class="cursor-pointer" (click)="canceledSelection()">
+                    <svg class="w-5 h-5">
+                        <use href="#close"></use>
+                    </svg>
+                </span>
+            </div>
+            <!-- Modal-body -->
+            <div class="w-full h-4/5 py-6 border-y border-slate-300" style="min-height: 320px; position: relative;">
+                @if (repUrl) {
+                <iframe class="h-full w-full" [src]="repUrl | safe : 'resourceUrl'" title="description"
+                    (load)="onload()"></iframe>
+                }
+                <!-- Overlay -->
+                @if(loading){
+                <div class="overlay overlay--active" style="position: absolute;">
+                    <app-loading-spinner class="h-full"
+                        style="display: flex; justify-content: center; align-items: center;"></app-loading-spinner>
+                </div>
+                }
+            </div>
+            <!-- Modal-Footer -->
+            <div class="flex items-center justify-end gap-4 w-full py-2 font-YekanBakhSemiBold">
+                <button type="button" (click)="canceledSelection()"
+                    class="px-2 py-1 text-red-500 border border-red-500 rounded-md hover:text-slate-50 hover:bg-red-500 transition-all">
+                    انصراف
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay overlay--active"></div>

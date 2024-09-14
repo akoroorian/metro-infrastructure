@@ -1,0 +1,79 @@
+<!-- Toast -->
+
+@for (message of messages; track $index) {
+
+@if(message.type === QuestionChoiceType.error){
+<div class="toast toast--active border-red-200">
+    <div class="relative flex justify-center w-full h-full bg-red-50 p-6">
+        <div (click)="close(message)">
+            <svg class="absolute top-2 left-2 w-4 h-4 text-zinc-500 cursor-pointer">
+                <use href="#close"></use>
+            </svg>
+        </div>
+        <span class="font-YekanBakhSemiBold text-sm text-zinc-500">{{message.text}}</span>
+        <div class="absolute right-2 top-0 bottom-0 my-auto w-1 h-5/6 bg-red-400 rounded-md"></div>
+    </div>
+</div>
+}
+@else if(message.type === QuestionChoiceType.success){
+  <div class="toast toast--active">
+      <div class="relative flex justify-center w-full h-full bg-green-50 p-6">
+          <div (click)="close(message)">
+              <svg class="absolute top-2 left-2 w-4 h-4 text-zinc-500 cursor-pointer">
+                  <use href="#close"></use>
+              </svg>
+          </div>
+          <span class="font-YekanBakhSemiBold text-sm text-zinc-500">{{message.text}}</span>
+          <div class="absolute right-2 top-0 bottom-0 my-auto w-1 h-5/6 bg-green-400 rounded-md"></div>
+      </div>
+  </div>
+  }
+@else if(message.type === QuestionChoiceType.warning){
+
+  <div class="toast toast--active border-yellow-200">
+    <div class="relative flex justify-center w-full h-full bg-yellow-50 p-6">
+        <div (click)="close(message)">
+            <svg class="absolute top-2 left-2 w-4 h-4 text-zinc-500 cursor-pointer">
+                <use href="#close"></use>
+            </svg>
+        </div>
+        <span class="font-YekanBakhSemiBold text-sm text-zinc-500">{{message.text}}</span>
+        <div class="absolute right-2 top-0 bottom-0 my-auto w-1 h-5/6 bg-yellow-400 rounded-md"></div>
+    </div>
+</div>
+}
+@else {
+  <div class="toast toast--active bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500">
+    <div class="relative flex justify-center w-full h-full p-6">
+        <div (click)="close(message)">
+            <svg class="absolute top-2 left-2 w-4 h-4 text-teal-800 opacity-50 hover:opacity-100 focus:outline-none focus:opacity-100 dark:text-teal-200 cursor-pointer">
+                <use href="#close"></use>
+            </svg>
+        </div>
+        <span class="font-YekanBakhSemiBold text-sm text-zinc-500">{{message.text}}</span>
+        <div class="absolute right-2 top-0 bottom-0 my-auto w-1 h-5/6  text-teal-800 opacity-50 rounded-md"></div>
+    </div>
+</div>
+<!-- <div class="max-w-xs bg-teal-100 border border-teal-200 text-sm text-teal-800 rounded-lg dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500"
+    role="alert">
+    <div class="flex p-4">
+        {{message.text}}
+        <div class="ms-auto">
+            <button type="button" (click)="close(message)"
+                class="inline-flex flex-shrink-0 justify-center items-center size-5 rounded-lg text-teal-800 opacity-50 hover:opacity-100 focus:outline-none focus:opacity-100 dark:text-teal-200">
+                <span class="sr-only">Close</span>
+                <svg class="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div> -->
+}
+
+}
+
+<!-- End Toast -->

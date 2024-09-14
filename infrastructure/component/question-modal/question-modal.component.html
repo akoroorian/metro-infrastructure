@@ -1,0 +1,36 @@
+@if(question.showQuestion){
+<!-- Modal -->
+<div class="modal" [class.modal--show]="question.showQuestion">
+    <!-- Modal-Container -->
+    <div class="modal-container px-3 py-1 rounded-md bg-slate-50 w-1/2 overflow-hidden">
+        <!-- Modal-Title -->
+        <div class="flex items-center justify-between w-full py-2">
+            <h6 class="font-YekanBakhSemiBold">تصمیم بگیرید</h6>
+            <span class="cursor-pointer" (click)="choosed(0)">
+                <svg class="w-5 h-5">
+                    <use href="#close"></use>
+                </svg>
+            </span>
+        </div>
+        <!-- Modal-body -->
+        <div class="w-full py-6 border-y border-slate-300">
+            <div class="grid grid-cols-3 items-center justify-between gap-4">
+                <div class="flex flex-col h-full col-span-full gap-y-1 text-xs">
+                    <div>{{question.question}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal-Footer -->
+        <div class="flex items-center justify-end gap-4 w-full py-2 font-YekanBakhSemiBold">
+            @for (choice of question.choices; track choice.id) {
+            <button type="button" [class]="getChoiceClass(choice)" (click)="choosed(choice.id)">
+                {{choice.choice}}
+            </button>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" [class.overlay--active]="question.showQuestion"></div>
+}

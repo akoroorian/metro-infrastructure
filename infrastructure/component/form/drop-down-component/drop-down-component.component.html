@@ -1,0 +1,24 @@
+<div>{{metroFormControl.column?.title}}</div>
+<div class="form-item-wrapper group" [class.form-item-disabled]="metroFormControl.column?.disabled" clickOutside
+    (clickOutside)="clickedOutside()">
+    <input #hidden type="hidden" [id]="'col_' + metroFormControl.column?.name"
+        [formControl]="metroFormControl.control" />
+    <input type="text" [id]="'col_' + metroFormControl.column?.name + '_text'" [value]='getEnumValueByKey(hidden.value)'
+        class="w-full h-full outline-none bg-inherit" (click)="toggleMenu()" readonly />
+    <button type="button" class="pl-1" (click)="toggleMenu()">
+        <svg class="w-4 h-4">
+            <use href="#chevron-down"></use>
+        </svg>
+    </button>
+    <!-- Selected-Dropdown -->
+    <div name="dropdownsss" class="selected-dropdown" [class.selected-dropdown--shown]="isMenuOpened">
+        <div class="px-2 py-1 hover:bg-slate-300 rounded-md cursor-pointer transition-all" (click)="onSelected(undefined)">
+            نامشخص</div>
+        @for (opt of metroFormControl.column?.enum | keyvalue; track opt){
+        @if(isValidEnumMember(opt)){
+        <div class="px-2 py-1 hover:bg-slate-300 rounded-md cursor-pointer transition-all" (click)="onSelected(opt)">
+            {{opt.value}}</div>
+        }
+        }
+    </div>
+</div>

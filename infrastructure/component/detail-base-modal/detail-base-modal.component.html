@@ -1,0 +1,99 @@
+<div class="modal modal--show">
+    <!-- Modal-Container -->
+    <div class="modal-container px-3 py-1 rounded-md bg-slate-50 w-3/4 h-3/4 overflow-hidden">
+        <div class="h-full flex-col"
+            style="display: flex !important; align-content: stretch; justify-content: space-between;">
+            <!-- Modal-Title -->
+            <div class="flex items-center justify-between w-full py-2 text-sky-800">
+                <h6 class="font-YekanBakhBold">{{this.detailDto ? "ویرایش" : ""}} {{this.properties.title}}
+                    {{this.detailDto
+                    ? "" : "جدید"}}</h6>
+                <span class="cursor-pointer" (click)="back()">
+                    <svg class="w-5 h-5">
+                        <use href="#close"></use>
+                    </svg>
+                </span>
+            </div>
+            <!-- Modal-body -->
+            <div class="w-full h-full py-6 border-y border-slate-300">
+
+
+                <div class="flex flex-col w-full bg-slate-50 py-2">
+                    <!-- Lookup-Body -->
+                    <div style="position: relative;">
+                        <div class="flex flex-col py-2 px-4 h-full">
+                            <form [formGroup]="detailForm">
+
+                                <!-- Lookup-Item -->
+                                <div>
+                                    <!-- Item-Content -->
+                                    <div class="lookup-content lookup-content--active">
+                                        <div class="grid grid-cols-12 items-center justify-between gap-4">
+                                            @for (fc of formControls; track fc.column?.name){
+                                            @if((!fc.column?.visible)){
+                                            <input type="hidden" [id]="'col_' + fc.column?.name"
+                                                class="w-full h-full outline-none bg-inherit"
+                                                [formControl]="fc.control" />
+                                            }
+                                            @else if (fc.column?.type === "bool") {
+                                            <app-check-box-component class="flex flex-col h-full gap-y-1 text-xs"
+                                                [metroFormControl]="fc" [style]="getColSpanClass(fc)">
+                                            </app-check-box-component>
+                                            }
+                                            @else if(fc.column?.type === "number" && fc.column?.enum){
+                                            <app-drop-down-component class="flex flex-col h-full gap-y-1 text-xs"
+                                                [metroFormControl]="fc"
+                                                [style]="getColSpanClass(fc)"></app-drop-down-component>
+                                            }
+                                            @else if(fc.column && fc.column.lookup && !fc.column.disabled &&
+                                            !fc.column.readonly){
+                                            <div [style]="getColSpanClass(fc)">
+                                                <ng-container
+                                                    *ngComponentOutlet="fc.column.lookup.type; inputs: {metroFormControl:fc, lookupSelected:lookupSelected};" />
+                                            </div>
+                                            }
+                                            @else {
+                                            <app-text-box-component class="flex flex-col h-full gap-y-1 text-xs"
+                                                [metroFormControl]="fc"
+                                                [style]="getColSpanClass(fc)"></app-text-box-component>
+                                            }
+                                            }@empty {
+                                            <app-loading-spinner></app-loading-spinner>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        @if(loading){
+                        <div class="overlay overlay--active" style="position: absolute;">
+                            <app-loading-spinner class="h-full"
+                                style="display: flex; justify-content: center; align-items: center;"></app-loading-spinner>
+                        </div>
+                        }
+                    </div>
+
+                </div>
+
+
+            </div>
+            <!-- Modal-Footer -->
+            <div class="flex items-center justify-end gap-4 w-full py-2 font-YekanBakhSemiBold">
+                <button type="button" (click)="submit()"
+                    class="px-2 py-1 text-green-500 border border-green-500 rounded-md hover:text-slate-50 hover:bg-green-500 transition-all">
+                    ثبت
+                </button>
+                <button type="button" (click)="back()"
+                    class="px-2 py-1 text-red-500 border border-red-500 rounded-md hover:text-slate-50 hover:bg-red-500 transition-all">
+                    انصراف
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay overlay--active"></div>
+
+<app-question-modal [question]="question" (onChoosed)="onChoosed($any($event))"></app-question-modal>

@@ -1,0 +1,41 @@
+<!-- Modal -->
+<div class="modal modal--show">
+    <!-- Modal-Container -->
+    <div class="modal-container px-3 py-1 rounded-md bg-slate-50 w-3/4 h-3/4 overflow-auto">
+        <div class="h-full flex-col"
+            style="display: flex !important; align-content: stretch; justify-content: space-between;">
+            <!-- Modal-Title -->
+            <div class="flex items-center justify-between w-full py-2">
+                <h6 class="font-YekanBakhSemiBold">{{title ?? 'عنوان'}}</h6>
+                <span class="cursor-pointer" (click)="canceledSelection()">
+                    <svg class="w-5 h-5">
+                        <use href="#close"></use>
+                    </svg>
+                </span>
+            </div>
+            <!-- Modal-body -->
+            <div class="w-full h-4/5 py-6 border-y border-slate-300" style="min-height: 320px;">
+                <app-metro-data-grid [serviceResult$]="serviceResult$" [properties]="properties" [showTools]=false
+                    (onFetch)="fetch($any($event))" [(selectedRow)]="selectedRow" class="h-full"
+                    [requestParamPart]="requestParamPart">
+                </app-metro-data-grid>
+            </div>
+            <!-- Modal-Footer -->
+            <div class="flex items-center justify-end gap-4 w-full py-2 font-YekanBakhSemiBold">
+                @if(modalListSelected.observed){
+                <button type="button" (click)="itemSelected()"
+                    class="px-2 py-1 text-green-500 border border-green-500 rounded-md hover:text-slate-50 hover:bg-green-500 transition-all">
+                    انتخاب
+                </button>
+                }
+                <button type="button" (click)="canceledSelection()"
+                    class="px-2 py-1 text-red-500 border border-red-500 rounded-md hover:text-slate-50 hover:bg-red-500 transition-all">
+                    انصراف
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay overlay--active"></div>

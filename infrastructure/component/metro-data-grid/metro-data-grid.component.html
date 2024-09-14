@@ -1,0 +1,246 @@
+<!-- Main-Container -->
+<div class="flex flex-col w-full p-3 rounded-md bg-slate-200 shadow-md h-full">
+  <!-- Header-container -->
+  @if(showTools){
+  <div class="flex items-center justify-between gap-2 mb-2">
+    <!-- Tools -->
+    <div class="flex items-center gap-2 max-w-fit">
+      <button type="button" class="tools-btn" (click)="add()">
+        <svg class="h-6 w-6">
+          <use href="#add-box"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn" (click)="remove()">
+        <svg class="h-6 w-6">
+          <use href="#delete"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn" (click)="edit()">
+        <svg class="h-6 w-6">
+          <use href="#edit"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn" (click)="refresh()">
+        <svg class="h-6 w-6">
+          <use href="#refresh"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn" (click)="setShowFilters(true)">
+        <svg class="h-6 w-6">
+          <use href="#filter"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn" (click)="setShowFilters(false)">
+        <svg class="h-6 w-6">
+          <use href="#filter-off"></use>
+        </svg>
+      </button>
+      @if(hasWorkFlow){
+      <button type="button" class="tools-btn flex border-sky-800" style="border-width: 1px" (click)="workFlow()">
+        اقدام
+        <svg class="h-6 w-6">
+          <use href="#work-flow"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn flex border-sky-800" style="border-width: 1px" (click)="workFlowRecords()">
+        گردش
+        <svg class="h-6 w-6">
+          <use href="#work-flow-history"></use>
+        </svg>
+      </button>
+      }
+      @if(properties.reportId){
+      <button type="button" class="tools-btn flex border-sky-800" style="border-width: 1px" (click)="print()">
+        <svg class="h-6 w-6">
+          <use href="#print"></use>
+        </svg>
+      </button>
+      <button type="button" class="tools-btn flex border-sky-800" style="border-width: 1px" (click)="excel()">
+        <svg class="h-6 w-6">
+          <use href="#excel"></use>
+        </svg>
+      </button>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Table-Wrapper -->
+  <div class="h-full flex items-center justify-center text-sm overflow-hidden" style="position: relative;">
+    <div class="w-full h-full bg-slate-50 text-sm overflow-auto rounded-md border border-slate-300">
+      <!-- Table-Header -->
+      <div
+        class="max-w-full min-w-fit flex flex-col py-1 font-YekanBakhSemiBold text-slate-50 bg-cyan-950 sticky top-0 z-10">
+        <!-- Table-Header-Top -->
+        <div class="flex items-center gap-2 w-full p-2">
+          <!-- table-cel -->
+          <button class="check-box border-slate-50 inline-block flex-shrink-0 opacity-0"></button>
+          @for (col of columns; track col.name) {
+          @if(col.type !== "action"){
+          <button class="inline-flex items-center gap-1 px-1 flex-shrink-0" [style]="getColWidthClass(col)"
+            (click)="sortColumn(col.name)">
+            {{ col.title }}
+            <!-- Sort-Icon -->
+            <div class="flex">
+              <span [class.filter-icon--active]="isSorted(col.name ,0)">
+                <svg class="w-3 h-3">
+                  <use href="#north"></use>
+                </svg>
+              </span>
+              <span [class.filter-icon--active]="isSorted(col.name ,1)">
+                <svg class="w-3 h-3">
+                  <use href="#south"></use>
+                </svg>
+              </span>
+            </div>
+          </button>
+          }
+          @else {
+          <button class="inline-flex items-center gap-1 px-1 flex-shrink-0" [style]="getColWidthClass(col)">
+
+          </button>
+          }
+          }
+        </div>
+        <!-- Table-Header-Sub -->
+        @if(showFilters){
+        <form class="table-sub-filter table-sub-filter--active" (keydown)="onFilter($event)">
+          <div class="check-box opacity-0"></div>
+          @for (fc of formControls; track fc.column?.name){
+          @if(fc.column && fc.column.type !== "action" && fc.column.type !== "file"){
+          <div
+            class="relative flex items-center justify-between gap-2 px-2 py-1 text-zinc-800 bg-slate-100 border focus-within:bg-slate-50 focus-within:border-sky-400 rounded-md transition-all"
+            [style]="getColWidthClass(fc.column)">
+            <input type="text" class="w-full bg-inherit focus:bg-slate-50 outline-none transition-all"
+              [formControl]="fc.control" />
+            <span class="cursor-pointer text-sky-700">
+              <svg class="w-5 h-5">
+                <use href="#filter"></use>
+              </svg>
+            </span>
+          </div>
+          }
+          @else if(fc.column){
+          <div
+            class="relative flex items-center justify-between gap-2 px-2 py-1 text-zinc-800 rounded-md transition-all"
+            [style]="getColWidthClass(fc.column)">
+            <input type="text" class="w-full bg-inherit focus:bg-slate-50 outline-none transition-all" disabled />
+          </div> }
+          }
+        </form>
+        }
+      </div>
+      <!-- Table-Body -->
+      <div class="max-w-full min-w-fit flex flex-col">
+        <!-- row -->
+        @for (item of serviceResult?.result; track $index) {
+        <div
+          class="inline-flex items-center gap-2 px-2 py-1 hover:bg-sky-300 odd:bg-slate-100 even:bg-slate-200 cursor-pointer transition-colors"
+          [ngStyle]="{'background-color' : this.getTableRowColor(item)}"
+          (click)="selectRow(item)" (dblclick)="edit()">
+          <button type="button" class="check-box" [class.check-box--active]="selectedRow === item"></button>
+          @for (col of columns; track col.name) {
+          @if(col.type === 'action'){
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)">
+            @for (action of col.action; track $index) {
+            <button
+              class="relative w-fit border border-slate-100 bg-sky-500 px-4 py-1 text-xs text-slate-100 rounded-xl hover:bg-sky-600 hover:text-slate-100 transition-all shadow-2xl group"
+              (click)="onAction(action, item)">
+              {{ action.name }}
+              <svg
+                class="absolute top-0 bottom-0 my-auto left-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:left-0 transition-all">
+                <use href="#arrow-left"></use>
+              </svg>
+            </button>
+            }
+          </div>
+          } @else {
+          @if((col.type === 'number' || col.type === 'bool') && col.enum){
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)">
+            {{ getEnumValueByKey(col, getValue(item, col.name)) }}
+          </div>
+          } @else if(col.type === 'number'){
+          <div class="px-1 line-clamp-1" [style]="getColWidthClass(col)" dir="{{col.dir ?? 'ltr'}}">
+            {{ col.format ? (getValue(item, col.name) | mask: col.format : {thousandSeparator:',',
+            allowNegativeNumbers:true}) : (getValue(item,
+            col.name))}}
+          </div>
+          } @else if(col.type === 'datetime'){
+          <div class="px-1 line-clamp-1" dir="ltr" [style]="getColWidthClass(col)">
+            {{ getValue(item, col.name)? (getValue(item, col.name) | jalali) : '' }}
+          </div>
+          }
+          @else if(col.type==='file'){
+          <div class="px-1 line-clamp-1 hover:line-clamp-4 transition-all" [style]="getColWidthClass(col)" #textField>
+            @if(getValue(item, col.name))
+            {
+            <a href="{{configService.environment.apiUrl + 'file?id=' + getValue(item, col.name)}}" target="_blank">
+              <button type="button" class="tools-btn">
+                <!-- {{ getValue(item, col.name) }} -->
+                <svg class="h-6 w-6">
+                  <use href="#download-file"></use>
+                </svg>
+              </button>
+            </a>
+            }
+          </div>
+          }
+          @else {
+          <div class="px-1 line-clamp-1 hover:line-clamp-4 transition-all" [style]="getColWidthClass(col)" #textField>
+            {{ getValue(item, col.name) }}
+          </div>
+          }
+          }
+          }
+        </div>
+        }
+        @if(loading){
+        <div class="overlay overlay--active" style="position: absolute;">
+          <app-loading-spinner class="h-full"
+            style="display: flex; justify-content: center; align-items: center;"></app-loading-spinner>
+        </div>
+        }
+
+        <!-- <app-loading-spinner></app-loading-spinner> -->
+
+      </div>
+    </div>
+
+  </div>
+  <!-- pagination -->
+  @if(getPageCount()){
+  <div class="flex items-center justify-center w-full mx-auto mt-4">
+    <div class="flex items-center justify-center gap-2 p-1 bg-slate-200 max-w-fit rounded-md shadow-md">
+      @if((this.requestParamPart.paging?.pageNumber ?? 0) > 1){
+      <div
+        class="flex items-center justify-center rotate-180 w-8 h-8 font-YekanBakhSemiBold hover:text-slate-50 hover:bg-sky-600 cursor-pointer rounded-md transition-all"
+        (click)="gotoPrevPage()">
+        <svg class="h-6 w-6">
+          <use href="#chevron-left"></use>
+        </svg>
+      </div>
+      } @for (pageNumber of getPageNumbers(); track
+      $index) { @if(pageNumber === "\>" || pageNumber === '\<') { <div
+        class="flex items-center justify-center w-8 h-8 font-YekanBakhSemiBold hover:text-slate-50 hover:bg-sky-600 cursor-pointer rounded-md transition-all">
+        <div>...</div>
+    </div>
+    } @else{
+    <div
+      class="flex items-center justify-center w-8 h-8 font-YekanBakhSemiBold hover:text-slate-50 hover:bg-sky-600 cursor-pointer rounded-md transition-all"
+      [class.bg-sky-700]="pageNumber === (this.requestParamPart.paging?.pageNumber ?? 0)"
+      [class.text-slate-50]="pageNumber === (this.requestParamPart.paging?.pageNumber ?? 0)"
+      (click)="gotoPage($any(pageNumber))">
+      <div>{{ pageNumber }}</div>
+    </div>
+    } } @if((this.requestParamPart.paging?.pageNumber ?? 0) < getPageCount()){ <div
+      class="flex items-center justify-center w-8 h-8 font-YekanBakhSemiBold hover:text-slate-50 hover:bg-sky-600 cursor-pointer rounded-md transition-all"
+      (click)="gotoNextPage()">
+      <svg class="h-6 w-6">
+        <use href="#chevron-left"></use>
+      </svg>
+  </div>
+  }
+</div>
+</div>
+}
+</div>

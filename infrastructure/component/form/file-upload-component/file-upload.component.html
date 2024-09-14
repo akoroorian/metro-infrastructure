@@ -1,0 +1,16 @@
+<div>{{metroFormControl.column?.title}}</div>
+<div class="form-item-wrapper" [class.form-item-disabled]="metroFormControl.column?.disabled">
+    <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+    <input type="text" [id]="'col_' + metroFormControl.column?.name" [formControl]="metroFormControl.control" dir="ltr"
+        readonly class="w-full h-full outline-none bg-inherit" />
+    <button type="button" class="pl-1" (click)="fileUpload.click()">
+        <span class="cursor-pointer">
+            <svg class="w-4 h-4">
+                <use href="#upload-file"></use>
+            </svg>
+        </span>
+    </button>
+    <!-- <button type="button" class="pl-1" (click)="fileUpload.click()">
+        دانلود
+    </button> -->
+</div>

@@ -1,0 +1,13 @@
+<div>{{metroFormControl.column?.title}}</div>
+<div class="form-item-wrapper">
+    <input #hidden type="hidden" [id]="'col_' + metroFormControl.column?.name"
+        [formControl]="metroFormControl.control" />
+    @for (opt of metroFormControl.column?.enum | keyvalue; track opt){
+    @if(isValidEnumMember(opt)){
+    <div class="flex items-center gap-1" (click)="onSelected(opt)">
+        <button class="form-check-box" [class.form-check-box--active]="getEnumKey(hidden.value) == opt.key"></button>
+        <span>{{opt.value}}</span>
+    </div>
+    }
+    }
+</div>

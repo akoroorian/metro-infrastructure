@@ -1,0 +1,63 @@
+<div class="flex flex-col h-full overflow-auto p-5">
+  @if (headerViewComponent) {
+  <ng-container *ngComponentOutlet="headerViewComponent" />
+  <!-- <div>
+        <p>credit-head-line-header-component works!</p>
+    </div> -->
+  }
+
+  <app-metro-data-grid
+    #dataGrid
+    [serviceResult$]="serviceResult$"
+    [properties]="properties"
+    [hasWorkFlow]="hasWorkFlow"
+    [getRowColor]="getRowColor"
+    (onAdd)="add()"
+    (onRemove)="remove($any($event))"
+    (onEdit)="edit($any($event))"
+    (onFetch)="fetch($any($event))"
+    (onWorkFlow)="workFlow($any($event))"
+    (onWorkFlowRecords)="showWorkFlowRecords($any($event))"
+    (onPrint)="print($any($event))"
+    (onExcel)="excel($any($event))"
+    class="grow overflow-auto"
+    style="min-height: 320px"
+    [requestParamPart]="requestParamPart"
+    >
+  </app-metro-data-grid>
+
+  @if (footerViewComponent) {
+  <ng-container *ngComponentOutlet="footerViewComponent" />
+  <!-- <div>
+          <p>credit-head-line-header-component works!</p>
+      </div> -->
+  }
+
+  <app-question-modal
+    [question]="question"
+    (onChoosed)="onChoosed($any($event))"
+  ></app-question-modal>
+
+  @if(isShownModalList && modalProperties && (modalGetMethod)){
+  <MetroModalListComponent
+    [properties]="modalProperties"
+    [getList]="modalGetMethod"
+    [title]="modalTitle"
+    (modalListCanceled)="modalListCanceledSelection()"
+    [defaultRequestFiltering]="modalDefaultRequestFiltering"
+  >
+  </MetroModalListComponent>
+  } @if(isShownModalWorkFlow){
+  <MetroWorkFlowModalComponent
+    (modalListCanceled)="workflowStepCanceledSelection()"
+    (modalListSelected)="workflowStepSelected($any($event))"
+    [serviceResult$]="workflowStepServiceResult$"
+  >
+  </MetroWorkFlowModalComponent>
+  } @if(showPrint){
+  <app-metro-print-modal
+    (printModalClosed)="closePrintModal()"
+    [repRequestId]="repRequestId"
+  ></app-metro-print-modal>
+  }
+</div>

@@ -1,0 +1,11 @@
+.pending-state {
+  background-color: lightyellow;
+}
+
+.reject-state {
+  background-color: lightcoral;
+}
+
+.accept-state {
+  background-color: lightgreen;
+}

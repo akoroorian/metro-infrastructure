@@ -1,0 +1,59 @@
+<aside>
+  <!-- Sidebar Logo -->
+  <div class="sidebar-title flex justify-between items-center p-5 mb-8 sticky top-0 bg-cyan-950 z-10">
+    <div class="sidebar-brand flex items-center gap-3 mt-4 text-2xl font-bold">
+      <span>
+        <svg class="h-8 w-8">
+          <use href="#train"></use>
+        </svg>
+      </span>
+      <span class="font-YekanBakhBold text-sky-500">سامانه <span class=" text-zinc-300 text-lg"><br/> پرسنل پيمانكاران</span></span>
+    </div>
+  </div>
+  <!-- Main Menu Links -->
+  <ul class="sidebar-list p-0 mt-4 list-none">
+    @for (menuItem of accesibleMenuItems; track menuItem.id) {
+    @if(menuItem.subMenu) {
+    <li class="sidebar-list-item p-2 pl-0">
+      <div class="menu-item-with-submenu" routerLinkActive="menu-item--active" (click)="menueSelected(menuItem)">
+        <div class="flex items-center gap-2">
+          <span>
+            <svg class="h-6 w-6">
+              <use href="#inventory"></use>
+            </svg>
+          </span>
+          <a class="font-YekanBakhBold" [routerLink]="menuItem.href">{{ menuItem.title }}</a>
+        </div>
+        <span class="pl-5">
+          <svg class="h-5 w-5" [class.rotate-180]="menuItem.isOpen">
+            <use href="#chevron-down"></use>
+          </svg>
+        </span>
+      </div>
+      <!-- SubMenu -->
+      <ul class="submenu text-zinc-300 font-YekanBakhRegular" [class.submenu--open]="menuItem.isOpen">
+        @for (subMenuItem of menuItem.subMenu; track subMenuItem.id) {
+        <li class="submenu-item group" routerLinkActive="submenu-item--active" (click)="menueSelected(subMenuItem)">
+          <span class="text-cyan-950 group-hover:text-sky-500 transition-all">
+            <svg class="w-5 h-5">
+              <use href="#arrow-left"></use>
+            </svg> </span><a [routerLink]="subMenuItem.href">{{ subMenuItem.title }}</a>
+        </li>
+        }
+      </ul>
+    </li>
+    } @else {
+    <li class="sidebar-list-item p-2 pl-0">
+      <div class="menu-item" routerLinkActive="menu-item--active" (click)="menueSelected(menuItem)">
+        <span>
+          <svg class="h-6 w-6">
+            <use href="#dashboard"></use>
+          </svg>
+        </span>
+        <a class="font-YekanBakhBold" [routerLink]="menuItem.href">{{ menuItem.title }}</a>
+      </div>
+    </li>
+    }
+    }
+  </ul>
+</aside>

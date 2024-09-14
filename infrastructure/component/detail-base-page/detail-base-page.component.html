@@ -1,0 +1,87 @@
+<div class="flex flex-col w-full bg-slate-50 py-2">
+  <!-- Lookup-Header -->
+  <div class="pb-2 border-b border-slate-200">
+    <div class="flex items-center justify-between px-4 text-sky-800">
+      <h6 class="font-YekanBakhBold">{{this.id ? "ویرایش" : ""}} {{this.properties.title}} {{this.id ? "" :
+        "جدید"}}</h6>
+      <div class="flex items-center gap-4">
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Lookup-Body -->
+  <div style="position: relative;">
+    <div class="flex flex-col py-2 px-4 h-full">
+      <form [formGroup]="detailForm">
+
+        <!-- Lookup-Item -->
+        <div>
+          <!-- Item-Content -->
+          <div class="lookup-content lookup-content--active">
+            <div class="grid grid-cols-12 items-center justify-between gap-4">
+              @for (fc of formControls; track fc.column?.name){
+              @if((!fc.column?.visible)){
+              <input type="hidden" [id]="'col_' + fc.column?.name" class="w-full h-full outline-none bg-inherit"
+                [formControl]="fc.control" />
+              }
+              @else if (fc.column?.type === "bool") {
+              <app-check-box-component class="flex flex-col h-full gap-y-1 text-xs" [metroFormControl]="fc"
+                [style]="getColSpanClass(fc)">
+              </app-check-box-component>
+              }
+              @else if(fc.column?.type === "number" && fc.column?.enum){
+              <app-drop-down-component class="flex flex-col h-full gap-y-1 text-xs" [metroFormControl]="fc"
+                [style]="getColSpanClass(fc)"></app-drop-down-component>
+              }
+              @else if (fc.column?.type === "file") {
+              <app-file-upload-component class="flex flex-col h-full gap-y-1 text-xs" [metroFormControl]="fc"
+                [style]="getColSpanClass(fc)" [fileUploaded]="fileUploaded"></app-file-upload-component>
+              }
+              @else if(fc.column && fc.column.lookup && fc.column.lookup.type && !fc.column.disabled &&
+              !fc.column.readonly){
+              <div [style]="getColSpanClass(fc)">
+                <ng-container
+                  *ngComponentOutlet="fc.column.lookup.type; inputs: {metroFormControl:fc, lookupSelected:lookupSelected};" />
+              </div>
+              }
+              @else if (fc.column?.type === "datetime") {
+              <app-date-box-component class="flex flex-col h-full gap-y-1 text-xs" [metroFormControl]="fc"
+                [style]="getColSpanClass(fc)"></app-date-box-component>
+              }
+              @else {
+              <app-text-box-component class="flex flex-col h-full gap-y-1 text-xs" [metroFormControl]="fc"
+                [style]="getColSpanClass(fc)"></app-text-box-component>
+              }
+              }
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- Lookup-Footer -->
+    <div class="pt-2 border-t border-slate-200">
+      <div class="flex items-center justify-end gap-4 px-4">
+        <button type="submit" (click)="submit()"
+          class="py-1 px-2 border border-green-500 text-green-500 hover:text-slate-50 hover:bg-green-500 rounded-md transition-all">
+          ثبت تغییرات
+        </button>
+        <button type="button" (click)="back()"
+          class="py-1 px-2 border border-red-500 text-red-500 hover:text-slate-50 hover:bg-red-500 rounded-md transition-all">
+          انصراف
+        </button>
+      </div>
+    </div>
+
+    @if(loading){
+    <div class="overlay overlay--active" style="position: absolute;">
+      <app-loading-spinner class="h-full"
+        style="display: flex; justify-content: center; align-items: center;"></app-loading-spinner>
+    </div>
+    }
+  </div>
+
+  <app-question-modal [question]="question" (onChoosed)="onChoosed($any($event))"></app-question-modal>
+
+</div>
