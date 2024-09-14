@@ -1,3 +1,5 @@
+import { MessageService } from './../../service/message.service';
+import { MetroFormControl } from './../../domain/metro-form-control';
 import { Component, Inject, InjectionToken, OnInit, Type, inject } from '@angular/core';
 import { MetroBaseDto } from '../../domain/metro-base.dto';
 import { MetroDataGridComponent } from '../metro-data-grid/metro-data-grid.component';
@@ -27,6 +29,8 @@ const serviceInjector = new InjectionToken<IMetroBaseService<MetroBaseDto>>('ser
 })
 export abstract class ListBasePageComponent<TDto extends MetroBaseDto> extends BasePageComponent<TDto> implements OnInit {
 
+
+
   private configService = inject(ConfigService);
   private static readonly listableTypes = ['string', 'number', 'datetime', 'bool', 'enum', 'action', 'file'];
   showPrint: boolean = false;
@@ -48,6 +52,8 @@ export abstract class ListBasePageComponent<TDto extends MetroBaseDto> extends B
   constructor(@Inject(serviceInjector) service: IMetroBaseService<TDto>) {
     super(service);
   }
+
+  protected messageService = inject(MessageService);
 
   override ngOnInit(): void {
     super.ngOnInit();
@@ -82,10 +88,24 @@ export abstract class ListBasePageComponent<TDto extends MetroBaseDto> extends B
       .subscribe((choiceId) => {
         if (choiceId === 1)
           return this.service.remove(id)
-            .subscribe((result) => {
-              if (result.isSuccess)
-                this.fetch(this.requestParamPart);
-            });
+            ?.subscribe(
+              {
+                next: (serviceResult: ServiceResult<any>) => {
+                  if (serviceResult?.isSuccess) {
+                    this.fetch(this.requestParamPart);
+                  }
+
+                }, error: (error) => {
+                  // Handle the error here, e.g., show a toast
+                  this.messageService.send({ type: QuestionChoiceType.error, text: error.errror.message ?? "" });
+                }
+              }
+            //   (result) => {
+            //   if (result.isSuccess)
+            //     this.fetch(this.requestParamPart);
+            // }
+
+          );
         else
           return;
       });

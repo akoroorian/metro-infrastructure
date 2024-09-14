@@ -1,20 +1,20 @@
 <div class="flex flex-col h-full gap-y-1 text-xs">
-    <div>{{metroFormControl.column?.title}}</div>
-    <div class="form-item-wrapper" [class.form-item-disabled]="metroFormControl.column?.disabled">
-        <input type="text" [id]="'col_' + metroFormControl.column?.name" class="w-full h-full outline-none bg-inherit"
-            [formControl]="metroFormControl.control" />
-        <button type="button" class="pl-1" (click)="onSearchClick()">
-            <span class="cursor-pointer">
-                <svg class="w-4 h-4">
-                    <use href="#search"></use>
-                </svg>
-            </span>
-        </button>
-    </div>
+  <div>{{metroFormControl.column?.title}}</div>
+  <div class="form-item-wrapper" [class.form-item-disabled]="metroFormControl.column?.disabled">
+    <input type="text" [id]="'col_' + metroFormControl.column?.name" class="w-full h-full outline-none bg-inherit"
+      [formControl]="metroFormControl.control" />
+    <button type="button" class="pl-1" (click)="onSearchClick()" [disabled]="metroFormControl.column?.disabled">
+      <span class="cursor-pointer">
+        <svg class="w-4 h-4">
+          <use href="#search"></use>
+        </svg>
+      </span>
+    </button>
+  </div>
 </div>
 
 @if(showModalList){
 <MetroModalListComponent (modalListSelected)="modalListSelected($event)"
-    (modalListCanceled)="modalListCanceledSelection()" [properties]="properties" [getList]="getList">
+  (modalListCanceled)="modalListCanceledSelection()" [properties]="properties" [getList]="getList">
 </MetroModalListComponent>
 }

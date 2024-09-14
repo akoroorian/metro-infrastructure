@@ -79,8 +79,13 @@ export abstract class DetailBasePageComponent<TDto extends MetroBaseDto> extends
           this.formControls.forEach(formControl => {
             formControl.control.setValue(this.getValue(data.result, formControl.column?.name))
           });
+        this.afterDataLoaded();
         this.detailFormValueChanged = false;
       });
+  }
+
+  afterDataLoaded() {
+
   }
 
   override hasUnsavedChanges(): boolean {
